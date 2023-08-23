@@ -11,11 +11,11 @@ datasource db {
 }
 
 model Cardapio {
-  id        Int      @id @default(autoincrement())
+  id        Int     @id @default(autoincrement())
   produto   String
   descricao String
   preco     Float
-  itens  Itens[]
+  itens     Itens[]
 }
 
 model Motoboy {
@@ -33,7 +33,7 @@ model Cliente {
   telefones           String
   enderecoCep         String
   enderecoNumero      String
-  enderecoComplemento String
+  enderecoComplemento String?
   pedidos             Pedido[]
 }
 
@@ -42,8 +42,8 @@ model Pedido {
   clienteId    Int
   cliente      Cliente   @relation(fields: [clienteId], references: [id])
   motoboyId    Int
-  Motoboy      Motoboy   @relation(fields: [motoboyId], references: [id])
-  dataPedido   DateTime
+  motoboy      Motoboy   @relation(fields: [motoboyId], references: [id])
+  dataPedido   DateTime  @default(now())
   dataCozinha  DateTime?
   dataEntrega  DateTime?
   valorPedido  Float
@@ -52,10 +52,11 @@ model Pedido {
 }
 
 model Itens {
-  id Int @id @default(autoincrement())
-  pedidoId Int 
-  pedido Pedido @relation(fields: [pedidoId], references: [id])
+  id         Int      @id @default(autoincrement())
+  pedidoId   Int
+  pedido     Pedido   @relation(fields: [pedidoId], references: [id], onDelete: Cascade)
   cardapioId Int
-  cardapio Cardapio @relation(fields: [cardapioId], references: [id])
+  cardapio   Cardapio @relation(fields: [cardapioId], references: [id])
   quantidade Int
+  valor      Float
 }
